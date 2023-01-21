@@ -111,7 +111,8 @@ button.addEventListener('click', function(){
             var winddirValue = data['current_weather']['winddirection'];
             var alltimeValue = data['hourly']['time'];
             for (var i = 0; i < alltimeValue.length; i++){
-                alltimeValue[i] = new Date(alltimeValue[i] * 1000)
+                var newDateFormat = new Date(alltimeValue[i] * 1000);
+                alltimeValue[i] = newDateFormat.getDate()+'/'+newDateFormat.getMonth()+1+'/'+newDateFormat.getFullYear()+' - '+newDateFormat.getHours()+'h';
             };
             var alltempValue = data['hourly']['temperature_2m'];
             time.innerHTML = 'Current Time: ' + timeValue;
