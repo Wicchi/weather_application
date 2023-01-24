@@ -16,7 +16,7 @@ import 'ol/ol.css'
 
  function createMap(latitudetest, longitudetest){
     useGeographic();
-    const places = [latitudetest, longitudetest];
+    const places = [longitudetest, latitudetest];
     const place = places.map(Number);
     const point = new Point(place);
 
@@ -97,8 +97,7 @@ import 'ol/ol.css'
     });
 
  };
-
-createMap(14.44, 50.07);
+createMap(50.07, 14.44);
 
 button.addEventListener('click', function(){
     fetch('https://api.open-meteo.com/v1/forecast?latitude='+latValue.value+'&longitude='+lonValue.value+'&hourly=temperature_2m&timeformat=unixtime&current_weather=true&timezone=Europe%2FBerlin&contentType=json')
