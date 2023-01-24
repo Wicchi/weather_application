@@ -106,8 +106,8 @@ button.addEventListener('click', function(){
 
             var timeValue = new Date(data['current_weather']['time'] * 1000);
             var tempValue = data['current_weather']['temperature']+data['hourly_units']['temperature_2m'];
-            var windsValue = data['current_weather']['windspeed'];
-            var winddirValue = data['current_weather']['winddirection'];
+            var windsValue = data['current_weather']['windspeed'] + " kmh";
+            var winddirValue = data['current_weather']['winddirection'] + " °";
             var alltimeValue = data['hourly']['time'];
             for (var i = 0; i < alltimeValue.length; i++){
                 var newDateFormat = new Date(alltimeValue[i] * 1000);
@@ -125,7 +125,7 @@ button.addEventListener('click', function(){
                 data: {
                 labels: alltimeValue,
                 datasets: [{
-                    label: '2m Temperature',
+                    label: '2m Temperature, '+data['hourly_units']['temperature_2m'],
                     borderColor:  '#612a2a',
                     tension: 0.1,
                     data: alltempValue,
