@@ -27,6 +27,12 @@ body{
     margin: 80px
 }
 
+.checkboxlist {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 input[type="text"] {
     height: 50px;
     width: 300px;

@@ -13,6 +13,7 @@ import {Point} from 'ol/geom.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {useGeographic} from 'ol/proj.js';
 import 'ol/ol.css'
+import { degreesToStringHDMS } from 'ol/coordinate';
 
 
  function createMap(latitudetest, longitudetest){
@@ -126,38 +127,64 @@ setInterval(function (){
     }
 }, 3000);
 
+const urlconsctructor = function(){
+    let checkedElements = document.querySelectorAll('.filled-in:checked');
+    let checkedline = [];
+    for (let i of checkedElements){
+        checkedline.push(i.value)
+    }
+    Array.prototype.map.call(checkedline, s => s).toString();       
+    let url = 'https://api.open-meteo.com/v1/forecast?latitude='+latValue.value+'&longitude='+lonValue.value+'&hourly='+checkedline+'&timeformat=unixtime&current_weather=true&timezone=Europe%2FBerlin&contentType=json'
+    return url;
+}
+
+
 button.addEventListener('click', function(){
-    getData('https://api.open-meteo.com/v1/forecast?latitude='+latValue.value+'&longitude='+lonValue.value+'&hourly=temperature_2m&timeformat=unixtime&current_weather=true&timezone=Europe%2FBerlin&contentType=json')
+    getData(urlconsctructor())
         .then(data => {
             var timeValue = new Date(data['current_weather']['time'] * 1000);
-            var tempValue = data['current_weather']['temperature']+data['hourly_units']['temperature_2m'];
+            var tempValue = data['current_weather']['temperature']+" °C";
             var windsValue = data['current_weather']['windspeed'] + " kmh";
             var winddirValue = data['current_weather']['winddirection'] + " °";
-            var alltimeValue = data['hourly']['time'];
-            for (var i = 0; i < alltimeValue.length; i++){
-                var newDateFormat = new Date(alltimeValue[i] * 1000);
-                alltimeValue[i] = newDateFormat.getDate()+'/'+newDateFormat.getMonth()+1+'/'+newDateFormat.getFullYear()+' - '+newDateFormat.getHours()+'h';
-            };
-            var alltempValue = data['hourly']['temperature_2m'];
+            let checkedElements = document.querySelectorAll('.filled-in:checked');
+            if (checkedElements){
+                var alltimeValue = data['hourly']['time'];
+                for (var i = 0; i < alltimeValue.length; i++){
+                    var newDateFormat = new Date(alltimeValue[i] * 1000);
+                    alltimeValue[i] = newDateFormat.getDate()+'/'+newDateFormat.getMonth()+1+'/'+newDateFormat.getFullYear()+' - '+newDateFormat.getHours()+'h';
+                };
+                var datasetsoptional = new Object();
+                let listdatasets = [];
+                let listoflabels = [];
+                let listofdata =[];
+                for (let a of checkedElements){
+                    a = a.value
+                    datasetsoptional.label = a + data['hourly_units'][`${a}`];
+                    listoflabels.push(datasetsoptional.label);
+                    datasetsoptional.data  = data['hourly'][`${a}`];
+                    listofdata.push(datasetsoptional.data);
+                    var jsonString= JSON.stringify(datasetsoptional);
+                    listdatasets.push(jsonString)
+                };
+                new Chart("canvas", {
+                    type: "line",
+                    data: {
+                    labels: alltimeValue,
+                    datasets: [{
+                        label: '2m Temperature, '+data['hourly_units']['temperature_2m'],
+                        borderColor:  '#612a2a',
+                        tension: 0.1,
+                        data: data['hourly']['temperature_2m'],
+                        fill: false
+                    }]
+                    },
+                    });
+                }
+
             time.innerHTML = 'Current Time: ' + timeValue;
             temp.innerHTML = 'Current Temperature: '+ tempValue;
             winddir.innerHTML = 'Current Wind Direction: ' + winddirValue;
-            winds.innerHTML = 'Current Wind Speed: '+ windsValue;
-                        
-
-            new Chart("canvas", {
-                type: "line",
-                data: {
-                labels: alltimeValue,
-                datasets: [{
-                    label: '2m Temperature, '+data['hourly_units']['temperature_2m'],
-                    borderColor:  '#612a2a',
-                    tension: 0.1,
-                    data: alltempValue,
-                    fill: false
-                }]
-                },
-                });
+            winds.innerHTML = 'Current Wind Speed: '+ windsValue;       
         })
 
     .catch(err => alert("Wrong values inserted"))
