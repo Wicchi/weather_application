@@ -99,11 +99,35 @@ import 'ol/ol.css'
  };
 createMap(50.07, 14.44);
 
-button.addEventListener('click', function(){
-    fetch('https://api.open-meteo.com/v1/forecast?latitude='+latValue.value+'&longitude='+lonValue.value+'&hourly=temperature_2m&timeformat=unixtime&current_weather=true&timezone=Europe%2FBerlin&contentType=json')
-        .then(response => response.json())
-        .then(data => {
+let cache = {};
+async function getData(url){
+    let result = "";
+    if(cache[url] !== undefined) return cache[url].value;
 
+    await fetch(url)
+    .then(response => response.json())
+    .then(json => cache[url] = {coordinate: new Date(), value: json});
+
+    return cache[url].value;
+}
+
+
+setInterval(function (){
+    if(Object.keys(cache).length > 0){
+        let currentTime = new Date();
+        Object.keys(cache).forEach(key => {
+            let seconds = currentTime - cache[key].time;
+            if(seconds > 10000){
+                delete cache[key];
+                console.log(`${key}'s cache deleted`)
+            }
+        })
+    }
+}, 3000);
+
+button.addEventListener('click', function(){
+    getData('https://api.open-meteo.com/v1/forecast?latitude='+latValue.value+'&longitude='+lonValue.value+'&hourly=temperature_2m&timeformat=unixtime&current_weather=true&timezone=Europe%2FBerlin&contentType=json')
+        .then(data => {
             var timeValue = new Date(data['current_weather']['time'] * 1000);
             var tempValue = data['current_weather']['temperature']+data['hourly_units']['temperature_2m'];
             var windsValue = data['current_weather']['windspeed'] + " kmh";
@@ -117,8 +141,8 @@ button.addEventListener('click', function(){
             time.innerHTML = 'Current Time: ' + timeValue;
             temp.innerHTML = 'Current Temperature: '+ tempValue;
             winddir.innerHTML = 'Current Wind Direction: ' + winddirValue;
-            winds.innerHTML = 'Current Wind Speed: '+ windsValue;      
-            
+            winds.innerHTML = 'Current Wind Speed: '+ windsValue;
+                        
 
             new Chart("canvas", {
                 type: "line",
