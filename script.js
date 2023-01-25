@@ -6,6 +6,7 @@ var temp = document.querySelector('.temp');
 var winds = document.querySelector('.winds');
 var winddir = document.querySelector('.winddir');
 var chart = document.querySelector('.chart');
+import Chart from 'chart.js/auto';
 import {Feature, Map, Overlay, View} from 'ol/index.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
 import {Point} from 'ol/geom.js';

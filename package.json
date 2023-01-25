@@ -5,10 +5,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chart.js": "^4.2.0",
     "ol": "^7.2.2"
   },
   "devDependencies": {
+    "chart.js": "^4.2.0",
     "vite": "^3.2.3"
   },
   "scripts": {
