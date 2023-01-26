@@ -9,7 +9,7 @@ Also, the user can decide what type of weather condition they want to plot a for
 
 The time range for the forecast is one month of current time.
 
-Once user press the submit button, the char with forecast will be plotted. Position on the Map (Open Street Map) will be updated by input coordinates. Default position of the map is Czech Republic, Prague.
+Once user press the submit button, the char with forecast will be plotted. Position on the Map (Open Street Map) will be updated by input coordinates. Default position of the map is Czech Republic, Prague. Correct weather condition for the input coordinates will be displayed.
 
 Collaborative work <a href="https://www.linkedin.com/in/vera-vavan-82b301219">Vavan Vera</a> and <a href="https://www.linkedin.com/in/vladislavshlapak/">Shlapak Vladislav</a>.
 
