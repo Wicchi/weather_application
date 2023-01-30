@@ -139,6 +139,25 @@ const urlconsctructor = function(){
 }
 
 
+
+const plotchar = function(data, element, labels){
+    let ctx = element + "_chart"
+    new Chart(ctx, {
+        type: "line",
+        data: {
+        labels: labels,
+        datasets: [{
+            label: [`${element}`] +data['hourly_units'][`${element}`],
+            borderColor:  '#612a2a',
+            tension: 0.1,
+            data: data['hourly'][`${element}`],
+            fill: false
+        }]
+        },
+        });
+}
+
+
 button.addEventListener('click', function(){
     getData(urlconsctructor())
         .then(data => {
@@ -153,24 +172,14 @@ button.addEventListener('click', function(){
                     var newDateFormat = new Date(alltimeValue[i] * 1000);
                     alltimeValue[i] = newDateFormat.getDate()+'/'+newDateFormat.getMonth()+1+'/'+newDateFormat.getFullYear()+' - '+newDateFormat.getHours()+'h';
                 };
-                let datasetsoptional = {};
-                datasetsoptional.label = [];
-                datasetsoptional.data = [];
-                //datasetsoptional.yAxisID = [];
+                debugger;
+
                 for (let a of checkedElements){
                     a = a.value
-                    datasetsoptional.label.push(a + " " + data['hourly_units'][`${a}`]);
-                    datasetsoptional.data.push(Object.values(data['hourly'][`${a}`]));
-                    //datasetsoptional.yAxisID.push(a)
+                    debugger;
+                    plotchar(data, a, alltimeValue);
                 };
-                
-                new Chart("canvas", {
-                    type: "line",
-                    data: {
-                    labels: alltimeValue,
-                    datasets: [datasetsoptional]
-                }})
-            
+                           
             }
 
             time.innerHTML = 'Current Time: ' + timeValue;
