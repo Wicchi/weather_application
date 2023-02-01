@@ -101,13 +101,11 @@ import 'ol/ol.css'
 createMap(50.07, 14.44);
 
 let cache = {};
-async function getData(url){
+const getData = function(url){
     if(cache[url] !== undefined) return cache[url].value;
     return fetch(url)
     .then(response => response.json())
     .then((json) => {
-        console.log(json);
-        debugger;
         cache[url] = {coordinate: new Date(), value: json};
     return cache[url].value});
 }
