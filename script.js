@@ -101,7 +101,7 @@ import 'ol/ol.css'
 createMap(50.07, 14.44);
 
 let cache = {};
-const getData = function(url){
+async function getData(url){
     if(cache[url] !== undefined) return cache[url].value;
     return fetch(url)
     .then(response => response.json())
