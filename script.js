@@ -103,10 +103,13 @@ createMap(50.07, 14.44);
 let cache = {};
 async function getData(url){
     if(cache[url] !== undefined) return cache[url].value;
-    await fetch(url)
+    return fetch(url)
     .then(response => response.json())
-    .then(json => cache[url] = {coordinate: new Date(), value: json});
-    return cache[url].value;
+    .then((json) => {
+        console.log(json);
+        debugger;
+        cache[url] = {coordinate: new Date(), value: json};
+    return cache[url].value});
 }
 
 setInterval(function (){
@@ -164,16 +167,25 @@ button.addEventListener('click', function(){
             var tempValue = data['current_weather']['temperature']+" °C";
             var windsValue = data['current_weather']['windspeed'] + " kmh";
             var winddirValue = data['current_weather']['winddirection'] + " °";
-            if (checkedElements){
-                var alltimeValue = data['hourly']['time'];
-                for (var i = 0; i < alltimeValue.length; i++){
-                    var newDateFormat = new Date(alltimeValue[i] * 1000);
-                    alltimeValue[i] = newDateFormat.getDate()+'/'+newDateFormat.getMonth()+1+'/'+newDateFormat.getFullYear()+' - '+newDateFormat.getHours()+'h';
-                };
+            var alltimeValue = data['hourly']['time']
+            if(isNaN(new Date(alltimeValue[0] * 1000))){
                 for (let a of checkedElements){
                     a = a.value
                     plotchar(data, a, alltimeValue);
-                };                           
+                };
+            }
+            else{
+                if (checkedElements){
+                    for (var i = 0; i < alltimeValue.length; i++){
+                        var newDateFormat = new Date(alltimeValue[i] * 1000);
+                        alltimeValue[i] = newDateFormat.getDate()+'/'+newDateFormat.getMonth()+1+'/'+newDateFormat.getFullYear()+' - '+newDateFormat.getHours()+'h';
+                    };
+                    for (let a of checkedElements){
+                        a = a.value
+                        plotchar(data, a, alltimeValue);
+                    }; 
+            }
+                          
             }
 
             time.innerHTML = 'Current Time: ' + timeValue;
