@@ -127,8 +127,8 @@ const urlconsctructor = function(checkedElements){
     let checkedline = []; 
     for (let i of checkedElements){
         checkedline.push(i.value)
-    }      
-    let url = 'https://api.open-meteo.com/v1/forecast?latitude='+latValue.value+'&longitude='+lonValue.value+'&hourly='+checkedline.toLocaleString()+'&timeformat=unixtime&current_weather=true&timezone=Europe%2FBerlin&contentType=json&past_days=27'
+    }   
+    let url = 'https://api.open-meteo.com/v1/forecast?latitude='+latValue.value+'&longitude='+lonValue.value+'&hourly='+checkedline.toString()+'&timeformat=unixtime&current_weather=true&timezone=Europe%2FBerlin&contentType=json&past_days=27'
     return url;
 }
 
@@ -166,26 +166,17 @@ button.addEventListener('click', function(){
             var windsValue = data['current_weather']['windspeed'] + " kmh";
             var winddirValue = data['current_weather']['winddirection'] + " °";
             var alltimeValue = data['hourly']['time']
-            if(isNaN(new Date(alltimeValue[0] * 1000))){
-                for (let a of checkedElements){
-                    a = a.value
-                    plotchar(data, a, alltimeValue);
-                };
-            }
-            else{
+            var timedatatoplot = [];
                 if (checkedElements){
                     for (var i = 0; i < alltimeValue.length; i++){
                         var newDateFormat = new Date(alltimeValue[i] * 1000);
-                        alltimeValue[i] = newDateFormat.getDate()+'/'+newDateFormat.getMonth()+1+'/'+newDateFormat.getFullYear()+' - '+newDateFormat.getHours()+'h';
+                        timedatatoplot[i] = newDateFormat.getDate()+'/'+newDateFormat.getMonth()+1+'/'+newDateFormat.getFullYear()+' - '+newDateFormat.getHours()+'h';
                     };
                     for (let a of checkedElements){
                         a = a.value
-                        plotchar(data, a, alltimeValue);
+                        plotchar(data, a, timedatatoplot);
                     }; 
             }
-                          
-            }
-
             time.innerHTML = 'Current Time: ' + timeValue;
             temp.innerHTML = 'Current Temperature: '+ tempValue;
             winddir.innerHTML = 'Current Wind Direction: ' + winddirValue;
